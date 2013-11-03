@@ -115,6 +115,47 @@ class LastName(Name):
     def next(self):
         return u'%s'[:self.max_length] % self.last_names.next()
 
+class CompanyName(Name):
+    """ Generates some plausible company names. """
+
+    def get_name(self):
+        return u'%s' % self.last_names.next()
+
+    def next(self):
+        return random.choice([
+            '%s and %s' % (self.get_name(), self.get_name())[:self.max_length],
+            '%s-%s' % (self.get_name(), self.get_name())[:self.max_length],
+            '%s Ltd.' % (self.get_name(),)[:self.max_length],
+            '%s and Son' % (self.get_name())[:self.max_length],
+            '%s Inc.' % (self.get_name())[:self.max_length],
+            '%s Inc.' % (self.get_name())[:self.max_length],
+            random.choice(lorem_ipsum.LOREM_IPSUM[0].split()).title(),
+        ])
+
+class Noun(Tube):
+    def __init__(self, **kwargs):
+        from scaffolding.library.booktitles import NOUNS
+        self.nouns = NOUNS
+
+    def next(self):
+        return random.choice(self.nouns)
+
+class Verb(Tube):
+    def __init__(self, **kwargs):
+        from scaffolding.library.booktitles import VERBS
+        self.verbs = VERBS
+
+    def next(self):
+        return random.choice(self.verbs)
+
+class Word(Tube):
+    def __init__(self, **kwargs):
+        from scaffolding.library.booktitles import VERBS, NOUNS
+        self.words = VERBS + NOUNS
+
+    def next(self):
+        return random.choice(self.words)
+
 class RandomEmail(Tube):
     """ Return a random email. """
 
