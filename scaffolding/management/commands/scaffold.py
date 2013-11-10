@@ -21,21 +21,38 @@ class Command(BaseCommand):
             raise CommandError('Do: scaffold <app_label.model_name> <count>')
 
         app_label, separator, model_name = args[0].partition('.')
-        model = loading.get_model(app_label, model_name)
 
-        if not isinstance(model, models.base.ModelBase):
-            raise CommandError('%s is not a Django model.' % model)
+        if model_name:
+            # We've specified a single model
+            model = loading.get_model(app_label, model_name)
+
+            if not isinstance(model, models.base.ModelBase):
+                raise CommandError('%s is not a Django model.' % model)
+
+            models_list = [model]
+
+        else:
+            # No model specified. Scaffold all of them.
+            scaffolds = scaffolding.all_scaffolds()
+            app = loading.get_app(app_label)
+            app_models = loading.get_models(app)
+            models_list = []
+            for key, value in scaffolds.items():
+                if key in app_models:
+                    models_list.append(key)
 
         count = int(args[1])
 
-        self.stdout.write(u'Creating %s\n' % model)
+        for model in models_list:
 
-        factory = self.make_factory(model, count)
+            self.stdout.write(u'Creating %s\n' % model)
 
-        for i in range(count):
-            self.make_object(model, factory)
+            factory = self.make_factory(model, count)
 
-        self.stdout.write(u'\nCreated %s %ss\n' % (count, model))
+            for i in range(count):
+                self.make_object(model, factory)
+
+            self.stdout.write(u'\nCreated %s %ss\n' % (count, model))
 
     def make_factory(self, cls, count):
         """ Get the generators from the Scaffolding class within the model.

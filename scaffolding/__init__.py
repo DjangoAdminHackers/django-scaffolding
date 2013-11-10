@@ -2,6 +2,7 @@
 
 import imp
 import sys
+from collections import OrderedDict
 
 from django.conf import settings
 from django.utils.importlib import import_module
@@ -35,10 +36,14 @@ def generic_autodiscover(module_name):
         app_path = sys.modules['%s.%s' % (app, module_name)]
 
 
-_registry = {}
+_registry = OrderedDict()
 
 def register(model, scaffold):
     _registry[model] = scaffold
+
+def all_scaffolds():
+    generic_autodiscover('scaffolds')
+    return _registry
 
 def scaffold_for_model(model):
     """
