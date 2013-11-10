@@ -128,7 +128,6 @@ class CompanyName(Name):
             '%s Ltd.' % (self.get_name(),)[:self.max_length],
             '%s and Son' % (self.get_name())[:self.max_length],
             '%s Inc.' % (self.get_name())[:self.max_length],
-            '%s Inc.' % (self.get_name())[:self.max_length],
             random.choice(lorem_ipsum.LOREM_IPSUM[0].split()).title(),
         ])
 
