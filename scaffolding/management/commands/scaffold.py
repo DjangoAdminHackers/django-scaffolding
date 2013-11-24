@@ -70,9 +70,11 @@ class Command(BaseCommand):
                 fields[field_name] = generator
                 text.append(u'%s: %s; ' % (field_name, fields[field_name]))
         try:
-            self.stdout.write(u'Generator for %s: %s\n' % (cls, u''.join(text)))
+            pass
+            #self.stdout.write(u'Generator for %s: %s\n' % (cls, u''.join(text)))
         except models.ObjectDoesNotExist:
-            self.stdout.write(u'Generator for %s\n' % u''.join(text))
+            pass
+            #self.stdout.write(u'Generator for %s\n' % u''.join(text))
 
         if hasattr(scaffold, 'finalize') and hasattr(scaffold.finalize, '__call__'):
             fields['_finalize'] = scaffold.finalize
@@ -99,7 +101,8 @@ class Command(BaseCommand):
             else:
                 setattr(obj, field_name, value)
             try:
-                self.stdout.write(u'%s: %s; ' % (field_name, value))
+                pass
+                #self.stdout.write(u'%s: %s; ' % (field_name, value))
             except (UnicodeEncodeError, TypeError):
                 pass
         obj.save()
