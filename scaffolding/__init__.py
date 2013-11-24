@@ -7,13 +7,13 @@ from collections import OrderedDict
 from django.conf import settings
 from django.utils.importlib import import_module
 
-from tubes import (Tube, Name, LoremIpsum, RandInt, Contrib, AlwaysTrue,
+from tubes import (Tube, Name, LoremIpsum, RandomLoremIpsum, RandInt, Contrib, AlwaysTrue,
     AlwaysFalse, StaticValue, RandomValue, EveryValue, RandomInternetImage,
     ForeignKey, FirstName, LastName, CompanyName, Noun, Verb, Word, TrueOrFalse, BookTitle, RandomDate,
     ForeignKeyOrNone, USCity, URL, OrNone, OrBlank, RandomEmail
     )
 
-__all__ = ['Tube', 'Name', 'LoremIpsum', 'RandInt', 'Contrib', 'AlwaysTrue',
+__all__ = ['Tube', 'Name', 'LoremIpsum', 'RandomLoremIpsum', 'RandInt', 'Contrib', 'AlwaysTrue',
     'AlwaysFalse', 'StaticValue', 'RandomValue', 'EveryValue', 'OrNone', 'OrBlank',
     'RandomInternetImage', 'FirstName', 'LastName', 'CompanyName', 'Noun', 'Verb', 'Word', 'USCity', 'URL',
     'TrueOrFalse', 'BookTitle', 'RandomDate', 'ForeignKeyOrNone',

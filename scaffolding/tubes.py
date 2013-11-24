@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import os
 import random
+import re
 import urllib
 import datetime
 import string
@@ -199,6 +200,35 @@ class LoremIpsum(Tube):
             return text[:self.max_length]
         return text
 
+class RandomLoremIpsum(Tube):
+    """ Generates a Lorem Ipsum Text. The number of paragraphs is defined in paragraphs.
+    """
+    def __init__(self, paragraphs=7, max_length=None, text=lorem_ipsum.LOREM_IPSUM, **kwargs):
+        super(RandomLoremIpsum, self).__init__(**kwargs)
+        random.shuffle(text)
+        self.text = text
+        for item in self.text:
+            sentences = re.split(r' *[\.\?!][\'"\)\]]* *', item)
+            random.shuffle(sentences)
+            item = ''.join(sentences)
+
+        self.max_length = max_length
+        self.paragraphs = paragraphs
+        #  TODO: Loop paragraphs.
+        if self.paragraphs > len(self.text):
+            raise AttributeError('The Text %s only has %s paragraphs' %(text, len(text)))
+
+    def next(self):
+        if self.paragraphs < len(self.text):
+            late_start = len(self.text) - self.paragraphs - 1
+            start = random.randint(0, late_start)
+        else:
+            start = 0
+        text = u'\n\n'.join(self.text[start:(start+self.paragraphs)])
+        if self.max_length:
+            return text[:self.max_length]
+        return text
+
 
 class RandInt(Tube):
     """ Generates a random integer between min and max """
@@ -271,7 +301,15 @@ class ForeignKey(EveryValue):
     """ Creates a foreign key assigning items from the queryset.
     """
     def __init__(self, queryset, chunksize=100, **kwargs):
-        super(ForeignKey, self).__init__(queryset[:chunksize])
+        self.index = -1
+        self.queryset = queryset[:chunksize]
+
+    def next(self):
+        length = self.queryset.count()
+        if length == 0:
+            raise StopIteration
+        self.index += 1
+        return self.queryset[self.index % length]
 
 
 class ForeignKeyOrNone(OrNone):
