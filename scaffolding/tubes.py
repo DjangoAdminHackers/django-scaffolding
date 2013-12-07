@@ -139,16 +139,16 @@ class StreetAddress(Name):
         return u'%s' % self.last_names.next()
 
     def get_int(self):
-        return str(random.randint(1,10))
+        return str(random.randint(1,100))
 
     def next(self):
         return random.choice([
-            '%s %s Street' % (self.get_int, self.get_name())[:self.max_length],
-            '%s %s Road' % (self.get_int, self.get_name())[:self.max_length],
-            '%s High Street' % (self.get_int, )[:self.max_length],
-            '%s %s Hill' % (self.get_int, self.get_name())[:self.max_length],
-            '%s Upper %s Street' % (self.get_int, self.get_name())[:self.max_length],
-            '%s %s House, %s Road' % (self.get_int, self.get_name(), self.get_name())[:self.max_length],
+            '%s %s Street' % (self.get_int(), self.get_name())[:self.max_length],
+            '%s %s Road' % (self.get_int(), self.get_name())[:self.max_length],
+            '%s High Street' % (self.get_int(), )[:self.max_length],
+            '%s %s Hill' % (self.get_int(), self.get_name())[:self.max_length],
+            '%s Upper %s Street' % (self.get_int(), self.get_name())[:self.max_length],
+            '%s %s House, %s Road' % (self.get_int(), self.get_name(), self.get_name())[:self.max_length],
         ])
 
 
