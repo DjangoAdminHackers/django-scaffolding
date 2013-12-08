@@ -10,14 +10,14 @@ from django.utils.importlib import import_module
 from tubes import (Tube, Name, LoremIpsum, RandomLoremIpsum, RandInt, Contrib, AlwaysTrue,
     AlwaysFalse, StaticValue, RandomValue, EveryValue, RandomInternetImage,
     ForeignKey, FirstName, LastName, CompanyName, Noun, Verb, Word, TrueOrFalse, BookTitle, RandomDate,
-    ForeignKeyOrNone, USCity, URL, OrNone, OrBlank, RandomEmail
+    ForeignKeyOrNone, USCity, URL, OrNone, OrBlank, RandomEmail, OtherField
     )
 
 __all__ = ['Tube', 'Name', 'LoremIpsum', 'RandomLoremIpsum', 'RandInt', 'Contrib', 'AlwaysTrue',
     'AlwaysFalse', 'StaticValue', 'RandomValue', 'EveryValue', 'OrNone', 'OrBlank',
     'RandomInternetImage', 'FirstName', 'LastName', 'CompanyName', 'Noun', 'Verb', 'Word', 'USCity', 'URL',
     'TrueOrFalse', 'BookTitle', 'RandomDate', 'ForeignKeyOrNone',
-    'ForeignKey', 'register', 'scaffold_for_model', 'RandomEmail']
+    'ForeignKey', 'register', 'scaffold_for_model', 'RandomEmail', 'OtherField']
 
 
 def generic_autodiscover(module_name):

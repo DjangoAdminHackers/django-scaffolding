@@ -1,5 +1,6 @@
 # coding=utf-8
 
+from collections import OrderedDict
 from datetime import datetime
 
 from django.core.management.base import BaseCommand, CommandError
@@ -57,10 +58,13 @@ class Command(BaseCommand):
     def make_factory(self, cls, count):
         """ Get the generators from the Scaffolding class within the model.
         """
-        field_names = cls._meta.get_all_field_names()
-        fields = {}
+        fields = OrderedDict()
         text = []
         scaffold = scaffolding.scaffold_for_model(cls)
+        try:
+            field_names = scaffold.field_order
+        except AttributeError:
+            field_names = cls._meta.get_all_field_names()
 
         for field_name in field_names:
             generator = getattr(scaffold, field_name, None)
@@ -96,10 +100,18 @@ class Command(BaseCommand):
             value = generator.next()
             if isinstance(field, models.fields.related.ForeignKey) and isinstance(value, int):
                 field_name = u'%s_id' % field_name
-            if isinstance(field, models.fields.files.FileField):
-                getattr(obj, field_name).save(*value, save=False)
+            if isinstance(generator, scaffolding.OtherField):
+                # Special handling for OtherField tube
+                source_field = value[0]
+                fn = value[1]
+                calc_value = fn(getattr(obj, source_field))
+                setattr(obj, field_name, calc_value)
             else:
-                setattr(obj, field_name, value)
+                # Normal tube handling
+                if isinstance(field, models.fields.files.FileField):
+                    getattr(obj, field_name).save(*value, save=False)
+                else:
+                    setattr(obj, field_name, value)
             try:
                 pass
                 #self.stdout.write(u'%s: %s; ' % (field_name, value))
