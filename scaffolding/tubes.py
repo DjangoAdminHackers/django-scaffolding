@@ -396,3 +396,12 @@ class URL(RandomValue):
         from .library.url import TopUrl
         urls = TopUrl(prefix=prefix)
         self.lst = urls()
+
+
+class OtherField(Tube):
+    """ Sets a field based on the value of another field """
+    def __init__(self, field, fn):
+        self.field = field
+        self.fn = fn
+    def next(self):
+        return (self.field, self.fn)
