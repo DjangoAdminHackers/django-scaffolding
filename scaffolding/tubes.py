@@ -132,6 +132,26 @@ class CompanyName(Name):
             random.choice(lorem_ipsum.LOREM_IPSUM[0].split()).title(),
         ])
 
+class StreetAddress(Name):
+    """ Generates some plausible street addresses. """
+
+    def get_name(self):
+        return u'%s' % self.last_names.next()
+
+    def get_int(self):
+        return str(random.randint(1,100))
+
+    def next(self):
+        return random.choice([
+            '%s %s Street' % (self.get_int(), self.get_name())[:self.max_length],
+            '%s %s Road' % (self.get_int(), self.get_name())[:self.max_length],
+            '%s High Street' % (self.get_int(), )[:self.max_length],
+            '%s %s Hill' % (self.get_int(), self.get_name())[:self.max_length],
+            '%s Upper %s Street' % (self.get_int(), self.get_name())[:self.max_length],
+            '%s %s House, %s Road' % (self.get_int(), self.get_name(), self.get_name())[:self.max_length],
+        ])
+
+
 class Noun(Tube):
     def __init__(self, **kwargs):
         from scaffolding.library.booktitles import NOUNS
@@ -241,6 +261,16 @@ class RandInt(Tube):
         return random.randint(self.min, self.max)
 
 
+class RandFloat(Tube):
+    """ Generates a random float between min and max """
+    def __init__(self, min, max, **kwargs):
+        super(RandFloat, self).__init__(**kwargs)
+        self.min = min
+        self.max = max
+
+    def next(self):
+        return random.uniform(self.min, self.max)
+
 class Contrib(object):
     """ Crates a Custom Object. The backend class is the first parameter.
         The backend class has to inherit from Tube.
@@ -342,9 +372,23 @@ class RandomDate(Tube):
 
 class USCity(RandomValue):
     def __init__(self):
-        from .library.cities import TopUsCities
+        from .library.geo import TopUsCities
         top_us = TopUsCities()
         self.lst = top_us()
+
+
+class UKCounty(RandomValue):
+    def __init__(self):
+        from .library.geo import UKCounties
+        uk_counties = UKCounty()
+        self.lst = uk_counties()
+
+
+class LondonBorough(RandomValue):
+    def __init__(self):
+        from .library.geo import LondonBoroughs
+        london_boroughs = LondonBoroughs()
+        self.lst = london_boroughs()
 
 
 class URL(RandomValue):
