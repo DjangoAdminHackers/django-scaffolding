@@ -380,7 +380,7 @@ class USCity(RandomValue):
 class UKCounty(RandomValue):
     def __init__(self):
         from .library.geo import UKCounties
-        uk_counties = UKCounty()
+        uk_counties = UKCounties()
         self.lst = uk_counties()
 
 
