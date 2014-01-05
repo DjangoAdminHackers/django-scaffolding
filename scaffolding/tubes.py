@@ -6,6 +6,7 @@ import re
 import urllib
 import datetime
 import string
+import time
 
 from scaffolding.library import lorem_ipsum
 from django.core.files import File
@@ -368,6 +369,32 @@ class RandomDate(Tube):
     def next(self):
         delta = (self.enddate - self.startdate).days
         return self.startdate + datetime.timedelta(random.randint(0, delta))
+
+def base36encode(number, alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
+    """Converts an integer to a base36 string."""
+    if not isinstance(number, (int, long)):
+        raise TypeError('number must be an integer')
+    base36 = ''
+    sign = ''
+    if number < 0:
+        sign = '-'
+        number = -number
+    if 0 <= number < len(alphabet):
+        return sign + alphabet[number]
+    while number != 0:
+        number, i = divmod(number, len(alphabet))
+        base36 = alphabet[i] + base36
+    return sign + base36
+
+class UniqueCode(Tube):
+    """ Generates a (probably) unique uppercase alphanumeric code. max length is 9"""
+    def __init__(self, max_length=9):
+        self.max_length = max_length if max_length<=9 else 9
+
+    def next(self):
+        t = int(time.time()*10000)
+        str = base36encode(t)
+        return str[-self.max_length:]
 
 
 class USCity(RandomValue):
