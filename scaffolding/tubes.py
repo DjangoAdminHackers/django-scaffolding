@@ -429,7 +429,7 @@ class Callable(Tube):
     def __init__(self, fn):
         self.fn = fn
     def next(self):
-        return (self.fn)
+        return (self.fn(None))
 
 class OtherField(Tube):
     """ Sets a field based on the value of another field """
