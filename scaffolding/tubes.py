@@ -426,10 +426,11 @@ class URL(RandomValue):
 
 class Callable(Tube):
     """ Sets a field based on the value of another field """
-    def __init__(self, fn):
+    def __init__(self, fn, param=None):
         self.fn = fn
+        self.param = param
     def next(self):
-        return (self.fn(None))
+        return (self.fn(self.param))
 
 class OtherField(Tube):
     """ Sets a field based on the value of another field """
