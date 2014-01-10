@@ -424,6 +424,12 @@ class URL(RandomValue):
         urls = TopUrl(prefix=prefix)
         self.lst = urls()
 
+class Callable(Tube):
+    """ Sets a field based on the value of another field """
+    def __init__(self, fn):
+        self.fn = fn
+    def next(self):
+        return (self.fn)
 
 class OtherField(Tube):
     """ Sets a field based on the value of another field """
