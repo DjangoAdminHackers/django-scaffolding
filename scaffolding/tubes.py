@@ -117,6 +117,42 @@ class LastName(Name):
     def next(self):
         return u'%s'[:self.max_length] % self.last_names.next()
 
+class ProductName(Tube):
+    """ Generates some plausible product names. """
+
+    def __init__(self, **kwargs):
+        from scaffolding.library import names
+        from scaffolding.library.booktitles import NOUNS
+        super(ProductName, self).__init__(**kwargs)
+        self.nouns = NOUNS
+        self.last_names = names.LastNames()
+
+    def get_letter(self, count):
+        return ''.join([chr(random.randrange(65, 65 + 26)) for x in range(0,count)])
+
+    def get_number(self, count):
+        return ''.join([chr(random.randrange(48, 48 + 10)) for x in range(0,count)])
+
+    def get_name(self):
+        return self.last_names.next()
+
+    def get_noun(self):
+        return random.choice(self.nouns)
+
+    def get_code(self):
+        return random.choice([
+            self.get_letter(2)+self.get_number(4),
+            self.get_letter(2)+self.get_number(1),
+            self.get_letter(2),
+            self.get_number(2)+self.get_letter(2),
+        ])
+
+    def next(self):
+        return random.choice([
+            '%s %s %s' % (self.get_name(), self.get_noun(), self.get_code()),
+            '%s %s %s' % (self.get_name(), self.get_code(), self.get_noun()),
+        ])
+
 class CompanyName(Name):
     """ Generates some plausible company names. """
 
