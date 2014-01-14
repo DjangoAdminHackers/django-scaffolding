@@ -51,7 +51,7 @@ class Command(BaseCommand):
             factory = self.make_factory(model, count)
 
             for i in range(count):
-                if i%100==0:
+                if i%100==0 and i>0:
                     self.stdout.write(u'Created %s\n' % i)
                 self.make_object(model, factory)
 
