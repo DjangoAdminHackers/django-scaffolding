@@ -51,6 +51,8 @@ class Command(BaseCommand):
             factory = self.make_factory(model, count)
 
             for i in range(count):
+                if i%100==0:
+                    self.stdout.write(u'Created %s\n' % i)
                 self.make_object(model, factory)
 
             self.stdout.write(u'\nCreated %s %ss\n' % (count, model._meta.model_name))
@@ -87,7 +89,7 @@ class Command(BaseCommand):
 
     def make_object(self, cls, fields):
         obj = cls()
-        self.stdout.write(u'\nCreated new %s: ' % obj.__class__.__name__)
+        # self.stdout.write(u'\nCreated new %s: ' % obj.__class__.__name__)
         finalize = None
         try:
             finalize = fields.pop('_finalize')
