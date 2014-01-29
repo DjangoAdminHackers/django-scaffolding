@@ -88,3 +88,19 @@ class Companies(object):
 
     def __call__(self):
         return self.companies
+
+
+PRODUCT_CATEGORIES = ['Cameras', 'Lighting', 'Lenses', 'Grips', 'Playback', 'Power', 'Tripods', 'Accessories', 'Amplifiers', 'Mixers', 'Monitors']
+
+class ProductCategories(object):
+    def __init__(self, categories=PRODUCT_CATEGORIES, *args, **kwargs):
+        self.categories = categories
+        self.index = 0
+        self.length = len(self.categories)
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        self.index += 1
+        return self.categories[self.index % self.length]

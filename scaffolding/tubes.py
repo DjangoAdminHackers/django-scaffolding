@@ -107,6 +107,17 @@ class Name(Tube):
     def next(self):
         return u'%s %s'[:self.max_length] % (self.first_names.next(), self.last_names.next())
 
+
+class ProductCategory(Tube):
+    def __init__(self, max_length=30, **kwargs):
+        from scaffolding.library import names
+        super(ProductCategory, self).__init__(**kwargs)
+        self.max_length = max_length
+        self.categories = names.ProductCategories()
+
+    def next(self):
+        return u'%s'[:self.max_length] % (self.categories.next())
+
 class FirstName(Name):
     """ Only returns first names. """
     def next(self):
