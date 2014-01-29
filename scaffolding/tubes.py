@@ -122,9 +122,11 @@ class ProductName(Tube):
 
     def __init__(self, **kwargs):
         from scaffolding.library import names
+        from .library.names import Companies
         from scaffolding.library.booktitles import NOUNS
         super(ProductName, self).__init__(**kwargs)
         self.nouns = NOUNS
+        self.companies = Companies()
         self.last_names = names.LastNames()
 
     def get_letter(self, count):
@@ -139,6 +141,9 @@ class ProductName(Tube):
     def get_noun(self):
         return random.choice(self.nouns)
 
+    def get_company(self):
+        return random.choice(self.companies())
+
     def get_code(self):
         return random.choice([
             self.get_letter(2)+self.get_number(4),
@@ -149,8 +154,9 @@ class ProductName(Tube):
 
     def next(self):
         return random.choice([
-            '%s %s %s' % (self.get_name(), self.get_noun(), self.get_code()),
-            '%s %s %s' % (self.get_name(), self.get_code(), self.get_noun()),
+            '%s %s' % (self.get_company(), self.get_code()),
+            # '%s %s %s' % (self.get_name(), self.get_noun(), self.get_code()),
+            # '%s %s %s' % (self.get_name(), self.get_code(), self.get_noun()),
         ])
 
 class CompanyName(Name):
@@ -168,6 +174,12 @@ class CompanyName(Name):
             '%s Inc.' % (self.get_name())[:self.max_length],
             random.choice(lorem_ipsum.LOREM_IPSUM[0].split()).title(),
         ])
+
+class RealCompanyName(RandomValue):
+    def __init__(self):
+        from .library.names import Companies
+        companies = Companies()
+        self.lst = companies()
 
 class StreetAddress(Name):
     """ Generates some plausible street addresses. """

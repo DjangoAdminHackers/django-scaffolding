@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import random
 
 ENGLISH_MALE_NAMES = ['Jacob', 'Ethan', 'Michael', 'Alexander', 'William', 'Joshua', 'Daniel',
@@ -76,3 +77,14 @@ class LastNames(object):
     def next(self):
         self.index += 1
         return self.last_names[self.index % self.length]
+
+class Companies(object):
+
+    def __init__(self):
+        path = os.path.dirname(os.path.realpath(__file__))
+        self.companies = []
+        with open(os.path.join(path, 'companies.txt'), 'rb') as txtfile:
+            self.companies = txtfile.readlines()
+
+    def __call__(self):
+        return self.companies
