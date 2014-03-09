@@ -84,7 +84,7 @@ class Companies(object):
         path = os.path.dirname(os.path.realpath(__file__))
         self.companies = []
         with open(os.path.join(path, 'companies.txt'), 'rb') as txtfile:
-            self.companies = txtfile.readlines()
+            self.companies = [line.rstrip() for line in txtfile]
 
     def __call__(self):
         return self.companies
