@@ -11,14 +11,14 @@ from tubes import (Tube, Name, LoremIpsum, RandomLoremIpsum, RandInt, RandFloat,
     AlwaysFalse, StaticValue, RandomValue, EveryValue, RandomInternetImage,
     ForeignKey, FirstName, LastName, ProductName, CompanyName, RealCompanyName, StreetAddress, Noun, Verb,
     Word, ProductCategory, TrueOrFalse, BookTitle, RandomDate,
-    ForeignKeyOrNone, UniqueCode, USCity, UKCounty, LondonBorough, URL, OrNone, OrBlank, RandomEmail,
+    ForeignKeyOrNone, UniqueCode, USCity, UKCounty, LondonBorough, LondonPostcode, URL, OrNone, OrBlank, RandomEmail,
     Callable, OtherField
     )
 
 __all__ = ['Tube', 'Name', 'LoremIpsum', 'RandomLoremIpsum', 'RandInt', 'RandFloat', 'Contrib',
            'AlwaysTrue', 'AlwaysFalse', 'StaticValue', 'RandomValue', 'EveryValue', 'OrNone',
            'OrBlank', 'RandomInternetImage', 'FirstName', 'LastName', 'ProductName', 'CompanyName', 'RealCompanyName', 'StreetAddress',
-           'Noun', 'Verb', 'Word', 'ProductCategory', 'UniqueCode', 'USCity', 'UKCounty', 'LondonBorough', 'URL',
+           'Noun', 'Verb', 'Word', 'ProductCategory', 'UniqueCode', 'USCity', 'UKCounty', 'LondonBorough', 'LondonPostcode', 'URL',
            'TrueOrFalse', 'BookTitle', 'RandomDate', 'ForeignKeyOrNone',
            'ForeignKey', 'register', 'scaffold_for_model', 'RandomEmail', 'Callable', 'OtherField']
 

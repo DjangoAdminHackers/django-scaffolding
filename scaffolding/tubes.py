@@ -9,6 +9,7 @@ import string
 import time
 
 from scaffolding.library import lorem_ipsum
+from scaffolding.library.london_postcodes import postcodes
 from django.core.files import File
 
 class Tube(object):
@@ -475,6 +476,22 @@ class LondonBorough(RandomValue):
         from .library.geo import LondonBoroughs
         london_boroughs = LondonBoroughs()
         self.lst = london_boroughs()
+
+
+class LondonPostcode(Tube):
+    """ Returns a list of London Postcodes (i.e. WC1)"""
+
+    def __init__(self):
+        self.postcodes = postcodes
+
+    def next(self):
+        letters = string.ascii_letters[26:]
+        return "%s %s%s%s" % (
+            random.choice(self.postcodes),
+            random.randint(1,9),
+            random.choice(letters),
+            random.choice(letters)
+        )
 
 
 class URL(RandomValue):
