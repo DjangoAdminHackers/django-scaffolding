@@ -50,10 +50,25 @@ class Command(BaseCommand):
 
             factory = self.make_factory(model, count)
 
+            finalize_all = None
+            try:
+                finalize_all = factory.pop('_finalize_all')
+            except KeyError:
+                pass
+
+
             for i in range(count):
                 if i%100==0 and i>0:
                     self.stdout.write(u'Created %s\n' % i)
                 self.make_object(model, factory)
+            if hasattr(factory, 'finalize_all'):
+                factory.finalize_all(model)
+
+            if finalize_all:
+                try:
+                    finalize_all(model)
+                except Exception as e:
+                    self.stdout.write(u"Error finalizing Model %s: " % str(e.args))
 
             self.stdout.write(u'\nCreated %s %ss\n' % (count, model._meta.model_name))
 
@@ -84,6 +99,9 @@ class Command(BaseCommand):
 
         if hasattr(scaffold, 'finalize') and hasattr(scaffold.finalize, '__call__'):
             fields['_finalize'] = scaffold.finalize
+
+        if hasattr(scaffold, 'finalize_all') and hasattr(scaffold.finalize_all, '__call__'):
+            fields['_finalize_all'] = scaffold.finalize_all
 
         return fields
 
@@ -119,11 +137,13 @@ class Command(BaseCommand):
                 #self.stdout.write(u'%s: %s; ' % (field_name, value))
             except (UnicodeEncodeError, TypeError):
                 pass
+
         obj.save()
+
         if finalize:
             try:
                 finalize(obj)
             except Exception as e:
-                self.stdout.write(u"Error finalizing Obj %s: " % e.message)
+                self.stdout.write(u"Error finalizing Obj %s: " % str(e.args))
             else:
                 obj.save()
