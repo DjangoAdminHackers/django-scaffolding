@@ -65,10 +65,7 @@ class Command(BaseCommand):
                 factory.finalize_all(model)
 
             if finalize_all:
-                try:
-                    finalize_all(model)
-                except Exception as e:
-                    self.stdout.write(u"Error finalizing Model %s: " % str(e.args))
+                finalize_all(model)
 
             self.stdout.write(u'\nCreated %s %ss\n' % (count, model._meta.model_name))
 
