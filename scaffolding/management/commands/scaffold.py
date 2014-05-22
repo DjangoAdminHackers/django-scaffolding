@@ -138,9 +138,5 @@ class Command(BaseCommand):
         obj.save()
 
         if finalize:
-            try:
-                finalize(obj)
-            except Exception as e:
-                self.stdout.write(u"Error finalizing Obj %s: " % str(e.args))
-            else:
-                obj.save()
+            finalize(obj)
+            obj.save()
