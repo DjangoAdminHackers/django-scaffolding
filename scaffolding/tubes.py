@@ -431,7 +431,7 @@ class RandomDate(Tube):
         delta = (self.enddate - self.startdate).days
         return self.startdate + datetime.timedelta(random.randint(0, delta))
 
-class RandomDateTime(Tube):
+class RandomDateTime(RandomDate):
 
     def next(self):
         new_date = super(RandomDateTime, self).next()
