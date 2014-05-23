@@ -435,8 +435,9 @@ class RandomDateTime(RandomDate):
 
     def next(self):
         new_date = super(RandomDateTime, self).next()
-        new_date = datetime.combine(new_date, datetime.timedelta(minutes=random.randint(0, 3)*15))
-        return pytz.utc.localize(new_date)
+        new_datetime = datetime.datetime.combine(new_date, datetime.time())
+        new_datetime += datetime.timedelta(minutes=random.randint(0, 3)*15)
+        return pytz.utc.localize(new_datetime)
 
 def base36encode(number, alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
     """Converts an integer to a base36 string."""
