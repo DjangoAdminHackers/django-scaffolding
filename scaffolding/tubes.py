@@ -7,6 +7,7 @@ import urllib
 import datetime
 import string
 import time
+import pytz
 
 from scaffolding.library import lorem_ipsum
 from scaffolding.library.london_postcodes import postcodes
@@ -429,6 +430,13 @@ class RandomDate(Tube):
     def next(self):
         delta = (self.enddate - self.startdate).days
         return self.startdate + datetime.timedelta(random.randint(0, delta))
+
+class RandomDateTime(Tube):
+
+    def next(self):
+        new_date = super(RandomDateTime, self).next()
+        new_date = datetime.combine(new_date, datetime.timedelta(minutes=random.randint(0, 3)*15))
+        return pytz.utc.localize(new_date)
 
 def base36encode(number, alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
     """Converts an integer to a base36 string."""
