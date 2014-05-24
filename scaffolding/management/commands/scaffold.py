@@ -50,13 +50,15 @@ class Command(BaseCommand):
 
             factory = self.make_factory(model, count)
 
+            new_objects = []
+
             for i in range(count):
                 if i%100==0 and i>0:
                     self.stdout.write(u'Created %s\n' % i)
-                self.make_object(model, factory)
+                new_objects.append(self.make_object(model, factory))
 
             if factory.get('_finalize_all', False):
-                factory['_finalize_all'](model)
+                factory['_finalize_all'](model, new_objects)
 
             self.stdout.write(u'\nCreated %s %ss\n' % (count, model._meta.model_name))
 
@@ -122,3 +124,5 @@ class Command(BaseCommand):
 
         if finalize:
             finalize(obj)
+
+        return obj
