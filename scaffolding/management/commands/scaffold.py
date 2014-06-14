@@ -60,7 +60,7 @@ class Command(BaseCommand):
             if factory.get('_finalize_all', False):
                 factory['_finalize_all'](model, new_objects)
 
-            self.stdout.write(u'\nCreated %s %ss\n' % (count, model._meta.model_name))
+            self.stdout.write(u'\nCreated %s %s\n' % (count, model._meta.verbose_name_plural))
 
     def make_factory(self, cls, count):
         """ Get the generators from the Scaffolding class within the model.
