@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import random
+import codecs
 
 ENGLISH_MALE_NAMES = ['Jacob', 'Ethan', 'Michael', 'Alexander', 'William', 'Joshua', 'Daniel',
                  'Jayden', 'Noah', 'Anthony', 'Jonathan', 'David', 'John', 'Mark', 'Calvin',
@@ -83,7 +84,7 @@ class Companies(object):
     def __init__(self):
         path = os.path.dirname(os.path.realpath(__file__))
         self.companies = []
-        with open(os.path.join(path, 'companies.txt'), 'rb') as txtfile:
+        with codecs.open(os.path.join(path, 'companies.txt'), encoding='utf-8', mode='rb') as txtfile:
             self.companies = [line.rstrip() for line in txtfile]
 
     def __call__(self):
