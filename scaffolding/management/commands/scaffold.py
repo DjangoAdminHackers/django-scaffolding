@@ -50,6 +50,9 @@ class Command(BaseCommand):
 
             factory = self.make_factory(model, count)
 
+            if factory.get('_initialize_all', False):
+                factory['_initialize_all'](model)
+
             new_objects = []
 
             for i in range(count):
@@ -87,6 +90,12 @@ class Command(BaseCommand):
             pass
             #self.stdout.write(u'Generator for %s\n' % u''.join(text))
 
+        if hasattr(scaffold, 'initialize_all') and hasattr(scaffold.initialize_all, '__call__'):
+            factory['_initialize_all'] = scaffold.initialize_all
+
+        if hasattr(scaffold, 'initialize') and hasattr(scaffold.initialize, '__call__'):
+            factory['_initialize'] = scaffold.initialize
+
         if hasattr(scaffold, 'finalize') and hasattr(scaffold.finalize, '__call__'):
             factory['_finalize'] = scaffold.finalize
 
@@ -98,10 +107,14 @@ class Command(BaseCommand):
     def make_object(self, cls, fields):
 
         obj = cls()
+        initialize = fields.get('_initialize', None)
         finalize = fields.get('_finalize', None)
 
+        if initialize:
+            initialize(obj)
+
         for field_name, generator in fields.items():
-            if not field_name in ['_finalize', '_finalize_all']:
+            if not field_name in ['_initialize_all', '_initialize', '_finalize', '_finalize_all']:
                 # Some custom processing
                 field = cls._meta.get_field(field_name)
                 value = generator.next()
