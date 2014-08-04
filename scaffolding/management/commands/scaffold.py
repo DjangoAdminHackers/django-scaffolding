@@ -18,124 +18,130 @@ class Command(BaseCommand):
     help = 'Creates placeholder data for your models.'
 
     def handle(self, *args, **options):
+
         if not args or len(args) != 2:
             raise CommandError('Do: scaffold <app_label.model_name> <count>')
 
         app_label, separator, model_name = args[0].partition('.')
-
-        if model_name:
-            # We've specified a single model
-            model = loading.get_model(app_label, model_name)
-
-            if not isinstance(model, models.base.ModelBase):
-                raise CommandError('%s is not a Django model.' % model)
-
-            models_list = [model]
-
-        else:
-            # No model specified. Scaffold all of them.
-            scaffolds = scaffolding.all_scaffolds()
-            app = loading.get_app(app_label)
-            app_models = loading.get_models(app)
-            models_list = []
-            for key, value in scaffolds.items():
-                if key in app_models:
-                    models_list.append(key)
-
         count = int(args[1])
 
-        for model in models_list:
+        do_scaffold(app_label, model_name, count)
 
-            self.stdout.write(u'Creating %s\n' % model)
 
-            factory = self.make_factory(model, count)
+def do_scaffold(app_label, model_name, count)
 
-            if factory.get('_initialize_all', False):
-                factory['_initialize_all'](model)
+    if model_name:
+        # We've specified a single model
+        model = loading.get_model(app_label, model_name)
 
-            new_objects = []
+        if not isinstance(model, models.base.ModelBase):
+            raise CommandError('%s is not a Django model.' % model)
 
-            for i in range(count):
-                if i%100==0 and i>0:
-                    self.stdout.write(u'Created %s\n' % i)
-                new_objects.append(self.make_object(model, factory))
+        models_list = [model]
 
-            if factory.get('_finalize_all', False):
-                factory['_finalize_all'](model, new_objects)
+    else:
+        # No model specified. Scaffold all of them.
+        scaffolds = scaffolding.all_scaffolds()
+        app = loading.get_app(app_label)
+        app_models = loading.get_models(app)
+        models_list = []
+        for key, value in scaffolds.items():
+            if key in app_models:
+                models_list.append(key)
 
-            self.stdout.write(u'\nCreated %s %s\n' % (count, model._meta.verbose_name_plural))
 
-    def make_factory(self, cls, count):
-        """ Get the generators from the Scaffolding class within the model.
-        """
-        factory = OrderedDict()
-        text = []
-        scaffold = scaffolding.scaffold_for_model(cls)
-        try:
-            field_names = scaffold.field_order
-        except AttributeError:
-            field_names = cls._meta.get_all_field_names()
+    for model in models_list:
 
-        for field_name in field_names:
-            generator = getattr(scaffold, field_name, None)
-            if generator:
-                if hasattr(generator, 'set_up'):
-                    generator.set_up(cls, count)
-                factory[field_name] = generator
-                text.append(u'%s: %s; ' % (field_name, factory[field_name]))
-        try:
-            pass
-            #self.stdout.write(u'Generator for %s: %s\n' % (cls, u''.join(text)))
-        except models.ObjectDoesNotExist:
-            pass
-            #self.stdout.write(u'Generator for %s\n' % u''.join(text))
+        self.stdout.write(u'Creating %s\n' % model)
 
-        if hasattr(scaffold, 'initialize_all') and hasattr(scaffold.initialize_all, '__call__'):
-            factory['_initialize_all'] = scaffold.initialize_all
+        factory = self.make_factory(model, count)
 
-        if hasattr(scaffold, 'initialize') and hasattr(scaffold.initialize, '__call__'):
-            factory['_initialize'] = scaffold.initialize
+        if factory.get('_initialize_all', False):
+            factory['_initialize_all'](model)
 
-        if hasattr(scaffold, 'finalize') and hasattr(scaffold.finalize, '__call__'):
-            factory['_finalize'] = scaffold.finalize
+        new_objects = []
 
-        if hasattr(scaffold, 'finalize_all') and hasattr(scaffold.finalize_all, '__call__'):
-            factory['_finalize_all'] = scaffold.finalize_all
+        for i in range(count):
+            if i%100==0 and i>0:
+                self.stdout.write(u'Created %s\n' % i)
+            new_objects.append(self.make_object(model, factory))
 
-        return factory
+        if factory.get('_finalize_all', False):
+            factory['_finalize_all'](model, new_objects)
 
-    def make_object(self, cls, fields):
+        self.stdout.write(u'\nCreated %s %s\n' % (count, model._meta.verbose_name_plural))
 
-        obj = cls()
-        initialize = fields.get('_initialize', None)
-        finalize = fields.get('_finalize', None)
+def make_factory(self, cls, count):
+    """ Get the generators from the Scaffolding class within the model.
+    """
+    factory = OrderedDict()
+    text = []
+    scaffold = scaffolding.scaffold_for_model(cls)
+    try:
+        field_names = scaffold.field_order
+    except AttributeError:
+        field_names = cls._meta.get_all_field_names()
 
-        if initialize:
-            initialize(obj)
+    for field_name in field_names:
+        generator = getattr(scaffold, field_name, None)
+        if generator:
+            if hasattr(generator, 'set_up'):
+                generator.set_up(cls, count)
+            factory[field_name] = generator
+            text.append(u'%s: %s; ' % (field_name, factory[field_name]))
+    try:
+        pass
+        #self.stdout.write(u'Generator for %s: %s\n' % (cls, u''.join(text)))
+    except models.ObjectDoesNotExist:
+        pass
+        #self.stdout.write(u'Generator for %s\n' % u''.join(text))
 
-        for field_name, generator in fields.items():
-            if not field_name in ['_initialize_all', '_initialize', '_finalize', '_finalize_all']:
-                # Some custom processing
-                field = cls._meta.get_field(field_name)
-                value = generator.next()
-                if isinstance(field, models.fields.related.ForeignKey) and isinstance(value, int):
-                    field_name = u'%s_id' % field_name
-                if isinstance(generator, scaffolding.OtherField):
-                    # Special handling for OtherField tube
-                    source_field = value[0]
-                    fn = value[1]
-                    calc_value = fn(getattr(obj, source_field))
-                    setattr(obj, field_name, calc_value)
+    if hasattr(scaffold, 'initialize_all') and hasattr(scaffold.initialize_all, '__call__'):
+        factory['_initialize_all'] = scaffold.initialize_all
+
+    if hasattr(scaffold, 'initialize') and hasattr(scaffold.initialize, '__call__'):
+        factory['_initialize'] = scaffold.initialize
+
+    if hasattr(scaffold, 'finalize') and hasattr(scaffold.finalize, '__call__'):
+        factory['_finalize'] = scaffold.finalize
+
+    if hasattr(scaffold, 'finalize_all') and hasattr(scaffold.finalize_all, '__call__'):
+        factory['_finalize_all'] = scaffold.finalize_all
+
+    return factory
+
+def make_object(self, cls, fields):
+
+    obj = cls()
+    initialize = fields.get('_initialize', None)
+    finalize = fields.get('_finalize', None)
+
+    if initialize:
+        initialize(obj)
+
+    for field_name, generator in fields.items():
+        if not field_name in ['_initialize_all', '_initialize', '_finalize', '_finalize_all']:
+            # Some custom processing
+            field = cls._meta.get_field(field_name)
+            value = generator.next()
+            if isinstance(field, models.fields.related.ForeignKey) and isinstance(value, int):
+                field_name = u'%s_id' % field_name
+            if isinstance(generator, scaffolding.OtherField):
+                # Special handling for OtherField tube
+                source_field = value[0]
+                fn = value[1]
+                calc_value = fn(getattr(obj, source_field))
+                setattr(obj, field_name, calc_value)
+            else:
+                # Normal tube handling
+                if isinstance(field, models.fields.files.FileField):
+                    getattr(obj, field_name).save(*value, save=False)
                 else:
-                    # Normal tube handling
-                    if isinstance(field, models.fields.files.FileField):
-                        getattr(obj, field_name).save(*value, save=False)
-                    else:
-                        setattr(obj, field_name, value)
+                    setattr(obj, field_name, value)
 
-        obj.save()
+    obj.save()
 
-        if finalize:
-            finalize(obj)
+    if finalize:
+        finalize(obj)
 
-        return obj
+    return obj
