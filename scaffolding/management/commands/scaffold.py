@@ -1,13 +1,13 @@
 # coding=utf-8
 
 from collections import OrderedDict
-from datetime import datetime
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import models
 from django.db.models import loading
 
 import scaffolding
+
 
 import logging
 logger = logging.getLogger(__name__)
@@ -28,7 +28,7 @@ class Command(BaseCommand):
         do_scaffold(app_label, model_name, count)
 
 
-def do_scaffold(app_label, model_name, count)
+def do_scaffold(app_label, model_name, count):
 
     if model_name:
         # We've specified a single model
@@ -52,9 +52,9 @@ def do_scaffold(app_label, model_name, count)
 
     for model in models_list:
 
-        self.stdout.write(u'Creating %s\n' % model)
+        print u'Creating %s\n' % model
 
-        factory = self.make_factory(model, count)
+        factory = make_factory(model, count)
 
         if factory.get('_initialize_all', False):
             factory['_initialize_all'](model)
@@ -63,15 +63,15 @@ def do_scaffold(app_label, model_name, count)
 
         for i in range(count):
             if i%100==0 and i>0:
-                self.stdout.write(u'Created %s\n' % i)
-            new_objects.append(self.make_object(model, factory))
+                print u'Created %s\n' % i
+            new_objects.append(make_object(model, factory))
 
         if factory.get('_finalize_all', False):
             factory['_finalize_all'](model, new_objects)
 
-        self.stdout.write(u'\nCreated %s %s\n' % (count, model._meta.verbose_name_plural))
+        print u'\nCreated %s %s\n' % (count, model._meta.verbose_name_plural)
 
-def make_factory(self, cls, count):
+def make_factory(cls, count):
     """ Get the generators from the Scaffolding class within the model.
     """
     factory = OrderedDict()
@@ -89,12 +89,6 @@ def make_factory(self, cls, count):
                 generator.set_up(cls, count)
             factory[field_name] = generator
             text.append(u'%s: %s; ' % (field_name, factory[field_name]))
-    try:
-        pass
-        #self.stdout.write(u'Generator for %s: %s\n' % (cls, u''.join(text)))
-    except models.ObjectDoesNotExist:
-        pass
-        #self.stdout.write(u'Generator for %s\n' % u''.join(text))
 
     if hasattr(scaffold, 'initialize_all') and hasattr(scaffold.initialize_all, '__call__'):
         factory['_initialize_all'] = scaffold.initialize_all
@@ -110,7 +104,7 @@ def make_factory(self, cls, count):
 
     return factory
 
-def make_object(self, cls, fields):
+def make_object(cls, fields):
 
     obj = cls()
     initialize = fields.get('_initialize', None)
