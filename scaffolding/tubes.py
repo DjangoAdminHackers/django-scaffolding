@@ -80,6 +80,7 @@ class OrNone(Tube):
         else:
             return self.cls.next()
 
+
 class OrBlank(Tube):
     """
     Yields values from the passed class or "".
@@ -120,15 +121,18 @@ class ProductCategory(Tube):
     def next(self):
         return u'%s'[:self.max_length] % (self.categories.next())
 
+
 class FirstName(Name):
     """ Only returns first names. """
     def next(self):
         return u'%s'[:self.max_length] % self.first_names.next()
 
+
 class LastName(Name):
     """ Only returns last names. """
     def next(self):
         return u'%s'[:self.max_length] % self.last_names.next()
+
 
 class ProductName(Tube):
     """ Generates some plausible product names. """
@@ -172,6 +176,7 @@ class ProductName(Tube):
             # '%s %s %s' % (self.get_name(), self.get_code(), self.get_noun()),
         ])
 
+
 class CompanyName(Name):
     """ Generates some plausible company names. """
 
@@ -188,11 +193,13 @@ class CompanyName(Name):
             random.choice(lorem_ipsum.LOREM_IPSUM[0].split()).title(),
         ])
 
+
 class RealCompanyName(RandomValue):
     def __init__(self):
         from .library.names import Companies
         companies = Companies()
         self.lst = companies()
+
 
 class StreetAddress(Name):
     """ Generates some plausible street addresses. """
@@ -222,6 +229,7 @@ class Noun(Tube):
     def next(self):
         return random.choice(self.nouns)
 
+
 class Verb(Tube):
     def __init__(self, **kwargs):
         from scaffolding.library.booktitles import VERBS
@@ -230,6 +238,7 @@ class Verb(Tube):
     def next(self):
         return random.choice(self.verbs)
 
+
 class Word(Tube):
     def __init__(self, **kwargs):
         from scaffolding.library.booktitles import VERBS, NOUNS
@@ -237,6 +246,7 @@ class Word(Tube):
 
     def next(self):
         return random.choice(self.words)
+
 
 class RandomEmail(Tube):
     """ Return a random email. """
@@ -248,6 +258,7 @@ class RandomEmail(Tube):
     def next(self):
         return ''.join(random.choice(string.ascii_lowercase)
                        for x in range(self.length)) + '@' + self.domain
+
 
 class BookTitle(Tube):
     def __init__(self, **kwargs):
@@ -281,6 +292,7 @@ class LoremIpsum(Tube):
         if self.max_length:
             return text[:self.max_length]
         return text
+
 
 class RandomLoremIpsum(Tube):
     """ Generates a Lorem Ipsum Text. The number of paragraphs is defined in paragraphs.
@@ -332,6 +344,7 @@ class RandFloat(Tube):
 
     def next(self):
         return random.uniform(self.min, self.max)
+
 
 class Contrib(object):
     """ Crates a Custom Object. The backend class is the first parameter.
@@ -431,6 +444,7 @@ class RandomDate(Tube):
         delta = (self.enddate - self.startdate).days
         return self.startdate + datetime.timedelta(random.randint(0, delta))
 
+
 class RandomDateTime(RandomDate):
 
     def next(self):
@@ -438,6 +452,7 @@ class RandomDateTime(RandomDate):
         new_datetime = datetime.datetime.combine(new_date, datetime.time())
         new_datetime += datetime.timedelta(minutes=random.randint(0, 3)*15)
         return pytz.utc.localize(new_datetime)
+
 
 def base36encode(number, alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
     """Converts an integer to a base36 string."""
@@ -454,6 +469,7 @@ def base36encode(number, alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
         number, i = divmod(number, len(alphabet))
         base36 = alphabet[i] + base36
     return sign + base36
+
 
 class UniqueCode(Tube):
     """ Generates a (probably) unique uppercase alphanumeric code. max length is 9"""
@@ -487,6 +503,17 @@ class LondonBorough(RandomValue):
         self.lst = london_boroughs()
 
 
+class UKPhone(Tube):
+    """ Generates a valid UK phone number without the country code
+    London only at the moment
+    """
+    def __init__(self):
+        self.max_length = 13
+
+    def next(self):
+        return '020 {:04d} {:04d}'.format(random.randint(0, 9999), random.randint(0, 99))
+
+
 class LondonPostcode(Tube):
     """ Returns a list of London Postcodes (i.e. WC1)"""
 
@@ -509,6 +536,7 @@ class URL(RandomValue):
         urls = TopUrl(prefix=prefix)
         self.lst = urls()
 
+
 class Callable(Tube):
     """ Sets a field based on the value of another field """
     def __init__(self, fn, param=None):
@@ -516,6 +544,7 @@ class Callable(Tube):
         self.param = param
     def next(self):
         return (self.fn(self.param))
+
 
 class OtherField(Tube):
     """ Sets a field based on the value of another field """

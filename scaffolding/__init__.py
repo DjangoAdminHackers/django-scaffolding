@@ -11,14 +11,14 @@ from tubes import (Tube, Name, LoremIpsum, RandomLoremIpsum, RandInt, RandFloat,
     AlwaysFalse, StaticValue, RandomValue, EveryValue, RandomInternetImage,
     ForeignKey, FirstName, LastName, ProductName, CompanyName, RealCompanyName, StreetAddress, Noun, Verb,
     Word, ProductCategory, TrueOrFalse, BookTitle, RandomDate, RandomDateTime,
-    ForeignKeyOrNone, UniqueCode, USCity, UKCounty, LondonBorough, LondonPostcode, URL, OrNone, OrBlank, RandomEmail,
+    ForeignKeyOrNone, UniqueCode, USCity, UKPhone, UKCounty, LondonBorough, LondonPostcode, URL, OrNone, OrBlank, RandomEmail,
     Callable, OtherField
     )
 
 __all__ = ['Tube', 'Name', 'LoremIpsum', 'RandomLoremIpsum', 'RandInt', 'RandFloat', 'Contrib',
            'AlwaysTrue', 'AlwaysFalse', 'StaticValue', 'RandomValue', 'EveryValue', 'OrNone',
            'OrBlank', 'RandomInternetImage', 'FirstName', 'LastName', 'ProductName', 'CompanyName', 'RealCompanyName', 'StreetAddress',
-           'Noun', 'Verb', 'Word', 'ProductCategory', 'UniqueCode', 'USCity', 'UKCounty', 'LondonBorough', 'LondonPostcode', 'URL',
+           'Noun', 'Verb', 'Word', 'ProductCategory', 'UniqueCode', 'USCity', 'UKPhone', 'UKCounty', 'LondonBorough', 'LondonPostcode', 'URL',
            'TrueOrFalse', 'BookTitle', 'RandomDate', 'RandomDateTime', 'ForeignKeyOrNone',
            'ForeignKey', 'register', 'scaffold_for_model', 'RandomEmail', 'Callable', 'OtherField']
 
