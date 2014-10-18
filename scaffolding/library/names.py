@@ -12,7 +12,7 @@ ENGLISH_MALE_NAMES = ['Jacob', 'Ethan', 'Michael', 'Alexander', 'William', 'Josh
 
 ENGLISH_FEMALE_NAMES = ['Isabella', 'Emma', 'Olivia', 'Sophia', 'Ava', 'Emily', 'Madison',
                    'Abigail', u'Chloe', 'Mia', 'Alice', 'Helen', 'Grace', 'Joanna', 'Ann',
-                   'Lisa', 'Lily,', 'May', 'June', 'April', 'Jane', 'Elise', 'Kristy',
+                   'Lisa', 'Lily', 'May', 'June', 'April', 'Jane', 'Elise', 'Kristy',
                    'Katie', 'Kathy', 'Julie', 'Jamie', 'Carol', 'Carrie', 'Elizabeth',
                    'Robin', 'Sally', 'Jackie', 'Sherry', 'Christine', 'Angela', 'Judy', 
                    'Ruth', 'Brooke', 'Megan', 'Dawn', 'Rebecca', 'Esther', 'Claire']
