@@ -2,6 +2,7 @@
 
 from distutils.core import setup
 import os
+import uuid
 from pip.req import parse_requirements
 import setuplib
 
