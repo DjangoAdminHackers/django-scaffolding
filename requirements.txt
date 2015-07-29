@@ -1,1 +1,2 @@
 flickrapi==1.4.2
+pytz==2015.4
