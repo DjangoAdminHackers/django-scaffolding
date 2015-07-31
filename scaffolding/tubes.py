@@ -12,6 +12,9 @@ import pytz
 from scaffolding.library import lorem_ipsum
 from scaffolding.library.london_postcodes import postcodes
 from django.core.files import File
+from scaffolding.library.names import ENGLISH_MALE_NAMES, ENGLISH_FEMALE_NAMES
+from scaffolding.library.url import TopUrl
+
 
 class Tube(object):
     """ The base class for scaffolding objects.
@@ -251,13 +254,24 @@ class Word(Tube):
 class RandomEmail(Tube):
     """ Return a random email. """
 
-    def __init__(self, length=8, domain="example.com"):
+    def __init__(self, length=8, domains=None):
+        self.index = -1
         self.length = length
-        self.domain = domain
+        self.domains = domains or TopUrl()()
+        self.names = ENGLISH_MALE_NAMES + ENGLISH_FEMALE_NAMES
+        self.num_names = len(self.names)
+        self.num_domains = len(self.names)
+        random.shuffle(self.names)
+        random.shuffle(self.domains)
 
     def next(self):
-        return ''.join(random.choice(string.ascii_lowercase)
-                       for x in range(self.length)) + '@' + self.domain
+        if self.length == 0:
+            raise StopIteration
+        self.index += 1
+        return u'{}@{}'.format(
+            self.names[self.index % self.num_names].lower(),
+            self.domains[self.index % self.num_domains],
+        )
 
 
 class BookTitle(Tube):
