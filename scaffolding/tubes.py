@@ -260,7 +260,7 @@ class RandomEmail(Tube):
         self.domains = domains or TopUrl()()
         self.names = ENGLISH_MALE_NAMES + ENGLISH_FEMALE_NAMES
         self.num_names = len(self.names)
-        self.num_domains = len(self.names)
+        self.num_domains = len(self.domains)
         random.shuffle(self.names)
         random.shuffle(self.domains)
 
